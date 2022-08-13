@@ -10,8 +10,8 @@ import RegisterPage from "../pages/RegisterPage";
 import Dashboard from "../pages/Dashboard";
 // import Todos from "../pages/Todolist";
 // import Calendarpage from "../pages/Calendar";
-// import Profile from "../pages/Profile";
-// import Settings from "../pages/Settings";
+import Profile from "../pages/Profile";
+import Settings from "../pages/Settings";
 
 import CustomDrawerContent from "./DrawerContent";
 
@@ -50,7 +50,7 @@ function DrawerNavBar() {
           drawerItemStyle: { display: "none" },
         }}
       />
-      {/* <Drawer.Screen
+      <Drawer.Screen
         name="Profile"
         component={Profile}
         options={{
@@ -61,7 +61,7 @@ function DrawerNavBar() {
             <Anticons name="user" size={22} color={color} />
           ),
         }}
-      /> */}
+      />
       <Drawer.Screen
         name="Dashboard"
         component={Dashboard}
@@ -86,8 +86,8 @@ function DrawerNavBar() {
             <Maticons name="playlist-edit" size={22} color={color} />
           ),
         }}
-      />
-      <Drawer.Screen
+      /> */}
+      {/* <Drawer.Screen
         name="Calendar"
         component={Calendarpage}
         options={{

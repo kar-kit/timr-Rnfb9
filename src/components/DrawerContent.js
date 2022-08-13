@@ -6,7 +6,6 @@ import {
   DrawerItemList,
   DrawerItem,
 } from "@react-navigation/drawer";
-import { useNavigation } from "@react-navigation/core";
 import {
   Button,
   Text,
@@ -16,9 +15,26 @@ import {
   Image,
 } from "react-native";
 
-// import { auth } from "../config";
+import { getAuth, signOut } from "firebase/auth";
+import { useNavigation } from "@react-navigation/core";
 
 function CustomDrawerContent(props) {
+  const navigation = useNavigation();
+
+  const auth = getAuth();
+
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+        navigation.navigate("Login");
+      })
+      .catch((error) => {
+        // An error happened.
+        alert(error.message);
+      });
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
@@ -36,11 +52,11 @@ function CustomDrawerContent(props) {
         <DrawerItemList {...props} />
       </DrawerContentScrollView>
 
-      {/* <View>
-        <TouchableOpacity style={styles.button} onPress={handleSignOut}>
+      <View>
+        <TouchableOpacity style={styles.button} onPress={handleLogout}>
           <Text style={styles.buttonText}>Logout</Text>
         </TouchableOpacity>
-      </View> */}
+      </View>
     </View>
   );
 }

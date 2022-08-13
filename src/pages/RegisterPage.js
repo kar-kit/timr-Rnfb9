@@ -25,17 +25,6 @@ const RegisterPage = () => {
     navigation.navigate("Login");
   };
 
-  // const handleSignup = () => {
-  //   auth
-  //     .createUserWithEmailAndPassword(email.trim(), password)
-  //     .then((userCredentials) => {
-  //       const user = userCredentials.user;
-  //       console.log("Registered with", user.email);
-  //     })
-  //     .catch((error) => alert(error.message));
-
-  // };
-
   const onRegisterPress = () => {
     if (password !== confirmPassword) {
       alert("Passwords don't match.");

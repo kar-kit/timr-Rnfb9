@@ -1,25 +1,31 @@
 import React, { Component } from "react";
 import { Button, Text, View, StyleSheet, TouchableOpacity } from "react-native";
-// import { auth } from "../config";
-import { useNavigation } from "@react-navigation/core";
+import { getAuth, signOut } from "firebase/auth";
 
-function Dashboard() {
-  // const navigation = useNavigation();
-  // const handleSignOut = () => {
-  //   auth
-  //     .signOut()
-  //     .then(() => {
-  //       navigation.navigate("Login");
-  //     })
-  //     .catch((error) => alert(error.message));
-  // };
+function Dashboard({ navigation }) {
+  const auth = getAuth();
+  const user = auth.currentUser;
+  const email = user.email;
+
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+        navigation.navigate("Login");
+      })
+      .catch((error) => {
+        // An error happened.
+        alert(error.message);
+      });
+  };
+
   return (
     <View style={styles.container}>
       <Text>Logged in !!</Text>
-      {/* <Text>Email: {auth.currentUser?.email}</Text>
-      <TouchableOpacity style={styles.button} onPress={handleSignOut}>
+      <Text>Email: {email}</Text>
+      <TouchableOpacity style={styles.button} onPress={handleLogout}>
         <Text style={styles.buttonText}>Sign Out</Text>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
     </View>
   );
 }
