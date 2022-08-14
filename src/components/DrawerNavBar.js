@@ -9,7 +9,7 @@ import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import Dashboard from "../pages/Dashboard";
 // import Todos from "../pages/Todolist";
-// import Calendarpage from "../pages/Calendar";
+import Calendarpage from "../pages/Calendar";
 import Profile from "../pages/Profile";
 import Settings from "../pages/Settings";
 
@@ -87,18 +87,18 @@ function DrawerNavBar() {
           ),
         }}
       /> */}
-      {/* <Drawer.Screen
+      <Drawer.Screen
         name="Calendar"
         component={Calendarpage}
         options={{
-          headerShown: false,
+          // headerShown: false,
           drawerActiveBackgroundColor: "#E3C8FF",
           drawerActiveTintColor: "#FFF",
           drawerIcon: (color) => (
             <Anticons name="calendar" size={22} color={color} />
           ),
         }}
-      /> */}
+      />
     </Drawer.Navigator>
   );
 }
