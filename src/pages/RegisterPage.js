@@ -11,7 +11,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/core";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { collection, doc, setDoc } from "firebase/firestore";
-import { firestore, auth } from "../../config";
+import { db, auth } from "../../config";
 
 const RegisterPage = () => {
   const [fullName, setFullName] = useState("");

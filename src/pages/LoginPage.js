@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/core";
-import { auth, firestore } from "../../config";
+import { auth, db } from "../../config";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 const LoginPage = () => {
