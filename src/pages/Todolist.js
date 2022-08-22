@@ -8,7 +8,6 @@ import {
   TextInput,
   FlatList,
 } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
 
 import {
   collection,
@@ -19,20 +18,18 @@ import {
   addDoc,
   serverTimestamp,
 } from "firebase/firestore";
+
 import { db, auth } from "../../config";
 
-const Calendar = () => {
-  //Datepicker useStates
+const Todos = () => {
   const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState("date");
-  const [show, setShow] = useState(false);
   //Todolist useStates
   const [entityText, setEntityText] = useState("");
   const [toDos, setToDos] = React.useState([]);
 
   useEffect(() => {
     fetchData();
-  }, [date]);
+  }, []);
 
   async function fetchData() {
     date.setHours(0, 0, 0, 0);
@@ -56,26 +53,6 @@ const Calendar = () => {
   }
   (error) => {
     console.log(error);
-  };
-
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    setShow(false);
-    setDate(currentDate);
-    console.log("selected date", currentDate);
-  };
-
-  const showMode = (currentMode) => {
-    if (Platform.OS === "android") {
-      setShow(false);
-      // for iOS, add a button that closes the picker
-    }
-    setMode(currentMode);
-  };
-
-  const showDatepicker = () => {
-    showMode("date");
-    setShow(true);
   };
 
   const addToDo = async (todo) => {
@@ -110,24 +87,7 @@ const Calendar = () => {
   };
 
   return (
-    <View style={styles.page}>
-      <Text>Tasks For {date.toLocaleDateString()}</Text>
-
-      <TouchableOpacity
-        style={styles.datePickerButton}
-        onPress={showDatepicker}
-      ></TouchableOpacity>
-
-      {show && (
-        <DateTimePicker
-          testID="dateTimePicker"
-          value={date}
-          mode={mode}
-          is24Hour={true}
-          onChange={onChange}
-        />
-      )}
-
+    <View>
       <View style={styles.container}>
         <View style={styles.formContainer}>
           <TextInput
@@ -159,25 +119,12 @@ const Calendar = () => {
   );
 };
 
-export default Calendar;
+export default Todos;
 
 const styles = StyleSheet.create({
-  page: {
-    marginTop: 60,
-    flex: 1,
-    alignItems: "center",
-  },
   container: {
     flex: 1,
     alignItems: "center",
-  },
-  datePickerButton: {
-    width: 30,
-    height: 30,
-    backgroundColor: "#009688",
-    borderRadius: 10,
-    paddingVertical: 10,
-    paddingHorizontal: 12,
   },
   formContainer: {
     flexDirection: "row",
@@ -214,11 +161,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   listContainer: {
-    marginTop: 40,
-    padding: 35,
+    marginTop: 70,
+    padding: 20,
   },
   entityContainer: {
-    marginTop: 16,
+    // marginTop: 16,
     // borderBottomColor: "grey",
     // borderBottomWidth: 2,
     // paddingBottom: 16,
