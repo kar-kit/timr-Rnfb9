@@ -52,7 +52,7 @@ const Calendar = () => {
       toDos.push(toDo);
     });
     setToDos(toDos);
-    console.log(toDos);
+    // console.log(toDos);
   }
   (error) => {
     console.log(error);
@@ -62,7 +62,7 @@ const Calendar = () => {
     const currentDate = selectedDate;
     setShow(false);
     setDate(currentDate);
-    console.log("selected date", currentDate);
+    // console.log("selected date", currentDate);
   };
 
   const showMode = (currentMode) => {
@@ -97,8 +97,8 @@ const Calendar = () => {
   };
 
   const renderToDoItem = ({ item, index }) => {
-    console.log(date.toDateString());
-    console.log(item.text);
+    // console.log(date.toDateString());
+    // console.log(item.text);
 
     return (
       <View style={styles.entityContainer}>

@@ -19,6 +19,8 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 
+import { useIsFocused } from "@react-navigation/native";
+
 import { db, auth } from "../../config";
 
 const Todos = () => {
@@ -26,10 +28,12 @@ const Todos = () => {
   //Todolist useStates
   const [entityText, setEntityText] = useState("");
   const [toDos, setToDos] = React.useState([]);
+  //screenFocus check
+  const isFocused = useIsFocused();
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [isFocused == true]);
 
   async function fetchData() {
     date.setHours(0, 0, 0, 0);
@@ -49,7 +53,6 @@ const Todos = () => {
       toDos.push(toDo);
     });
     setToDos(toDos);
-    console.log(toDos);
   }
   (error) => {
     console.log(error);
@@ -74,9 +77,6 @@ const Todos = () => {
   };
 
   const renderToDoItem = ({ item, index }) => {
-    console.log(date.toDateString());
-    console.log(item.text);
-
     return (
       <View style={styles.entityContainer}>
         <Text style={styles.entityText}>
