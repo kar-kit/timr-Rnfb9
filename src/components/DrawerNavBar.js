@@ -81,6 +81,7 @@ function DrawerNavBar() {
         options={{
           drawerActiveBackgroundColor: "#BEE8FF",
           drawerActiveTintColor: "#FFF",
+          headerShown: false,
 
           drawerIcon: (color) => (
             <Maticons name="playlist-edit" size={22} color={color} />
