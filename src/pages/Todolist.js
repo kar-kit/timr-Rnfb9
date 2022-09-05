@@ -7,6 +7,7 @@ import {
   Button,
   TextInput,
   FlatList,
+  Image,
 } from "react-native";
 
 import {
@@ -17,14 +18,23 @@ import {
   getDocs,
   addDoc,
   serverTimestamp,
+  doc,
+  deleteDoc,
+  writeBatch,
+  updateDoc,
 } from "firebase/firestore";
 
 import { useIsFocused } from "@react-navigation/native";
 
 import { db, auth } from "../../config";
+import { async } from "@firebase/util";
 
-const Todos = () => {
+const Todos = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
+  const [futureDate, setFutureDate] = useState(
+    new Date(Date.now() + 60 * 60 * 1440)
+  );
+
   //Todolist useStates
   const [entityText, setEntityText] = useState("");
   const [toDos, setToDos] = React.useState([]);
@@ -37,6 +47,7 @@ const Todos = () => {
 
   async function fetchData() {
     date.setHours(0, 0, 0, 0);
+    futureDate.setHours(0, 0, 0, 0);
 
     const q = query(
       collection(db, "tasks"),
@@ -76,45 +87,97 @@ const Todos = () => {
     setToDos(updatedToDos);
   };
 
-  const renderToDoItem = ({ item, index }) => {
+  const deleteTask = async (itemId) => {
+    console.log("Current Item Id: ", itemId);
+
+    await deleteDoc(doc(db, "tasks", itemId));
+    fetchData();
+  };
+
+  const shiftTasks = async () => {
+    date.setHours(0, 0, 0, 0);
+
+    const newDocumentBody = {
+      dateSet: futureDate,
+    };
+
+    const q = query(
+      collection(db, "tasks"),
+      where("userId", "==", auth.currentUser.uid),
+      where("dateSet", "==", date),
+      orderBy("timestamp")
+    );
+    const querySnapshot = await getDocs(q);
+    const batch = writeBatch(db);
+    querySnapshot.forEach((docs) => {
+      // doc.data() is never undefined for query doc snapshots
+      let groupId = docs.id;
+      console.log(groupId);
+      const sfRef = doc(db, "tasks", groupId);
+      batch.update(sfRef, newDocumentBody);
+    });
+    await batch.commit();
+
+    fetchData();
+  };
+
+  const renderToDoItem = ({ item }) => {
     return (
-      <View style={styles.entityContainer}>
-        <Text style={styles.entityText}>
-          {index}. {item.text}
-        </Text>
-      </View>
+      <TouchableOpacity onPress={() => deleteTask(item.id)}>
+        <View style={styles.entityContainer}>
+          <Text style={styles.entityText}>{item.text}</Text>
+        </View>
+      </TouchableOpacity>
     );
   };
 
   return (
-    <View>
-      <View style={styles.container}>
-        <View style={styles.formContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Add new entity"
-            placeholderTextColor="#aaaaaa"
-            onChangeText={(text) => setEntityText(text)}
-            value={entityText}
-            underlineColorAndroid="transparent"
-            autoCapitalize="none"
-          />
-          <TouchableOpacity style={styles.button} onPress={addToDo}>
-            <Text style={styles.buttonText}>Add</Text>
-          </TouchableOpacity>
-        </View>
+    <View style={styles.pageBorder}>
+      <TouchableOpacity
+        style={styles.hamMenu}
+        onPress={() => navigation.openDrawer()}
+      >
+        <Image source={require("../assets/images/ham-menu.png")} />
+      </TouchableOpacity>
+
+      <View style={styles.headerContainer}>
+        <Text style={styles.headerText}>Todays Tasks</Text>
       </View>
 
-      {toDos && (
-        <View style={styles.listContainer}>
-          <FlatList
-            data={toDos}
-            renderItem={renderToDoItem}
-            keyExtractor={(item) => item.id}
-            removeClippedSubviews={true}
-          />
+      <View style={styles.backdrop}>
+        <View style={styles.container}>
+          <View style={styles.formContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Add new entity"
+              placeholderTextColor="#aaaaaa"
+              onChangeText={(text) => setEntityText(text)}
+              value={entityText}
+              underlineColorAndroid="transparent"
+              autoCapitalize="none"
+            />
+            <TouchableOpacity style={styles.button} onPress={addToDo}>
+              <Text style={styles.buttonText}>Add</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.shiftContainer}>
+            <TouchableOpacity style={styles.buttonShift} onPress={shiftTasks}>
+              <Text style={styles.buttonTextShift}>Shift Tasks</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      )}
+
+        {toDos && (
+          <View style={styles.listContainer}>
+            <FlatList
+              data={toDos}
+              renderItem={renderToDoItem}
+              keyExtractor={(item) => item.id}
+              removeClippedSubviews={true}
+            />
+          </View>
+        )}
+      </View>
     </View>
   );
 };
@@ -122,9 +185,32 @@ const Todos = () => {
 export default Todos;
 
 const styles = StyleSheet.create({
-  container: {
+  pageBorder: {
     flex: 1,
+    marginTop: 35,
+  },
+  hamMenu: {
+    marginLeft: 20,
+  },
+  container: {
     alignItems: "center",
+  },
+  headerContainer: {
+    marginLeft: 35,
+    marginTop: 10,
+  },
+  headerText: {
+    fontFamily: "Inter-Black",
+    fontSize: 40,
+  },
+  backdrop: {
+    flex: 1,
+    backgroundColor: "#BEE8FF",
+    borderRadius: 18,
+    marginTop: 15,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 10,
   },
   formContainer: {
     flexDirection: "row",
@@ -135,11 +221,12 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     paddingLeft: 30,
-    paddingRight: 30,
+    paddingRight: 20,
     justifyContent: "center",
     alignItems: "center",
   },
   input: {
+    fontFamily: "Inter-SemiBold",
     height: 48,
     borderRadius: 5,
     overflow: "hidden",
@@ -157,31 +244,51 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   buttonText: {
+    fontFamily: "Inter-SemiBold",
     color: "white",
     fontSize: 16,
   },
   listContainer: {
-    marginTop: 70,
+    marginTop: 20,
+    marginLeft: 10,
     padding: 20,
   },
   entityContainer: {
-    // marginTop: 16,
-    // borderBottomColor: "grey",
-    // borderBottomWidth: 2,
-    // paddingBottom: 16,
+    flex: 1,
+    backgroundColor: "white",
+    borderRadius: 10,
+    borderColor: "#C0C0C0",
     paddingVertical: 15,
     paddingHorizontal: 15,
-    backgroundColor: "white",
-    borderRadius: 20,
-    borderColor: "#C0C0C0",
-    borderWidth: 1,
-    maxWidth: 250,
-    width: 250,
-    shadowRadius: 10,
     marginBottom: 20,
   },
   entityText: {
     fontSize: 20,
     color: "#333333",
+    fontFamily: "Inter-Regular",
+  },
+  shiftContainer: {
+    flexDirection: "row",
+    height: 70,
+    marginTop: 0,
+    marginBottom: 20,
+    flex: 1,
+    justifyContent: "center",
+    marginLeft: 30,
+    marginRight: 30,
+  },
+  buttonShift: {
+    padding: 10,
+    flex: 1,
+    height: 47,
+    borderRadius: 5,
+    backgroundColor: "#ec7878",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  buttonTextShift: {
+    fontFamily: "Inter-SemiBold",
+    color: "white",
+    fontSize: 16,
   },
 });
