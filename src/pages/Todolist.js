@@ -32,7 +32,7 @@ import { async } from "@firebase/util";
 const Todos = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
   const [futureDate, setFutureDate] = useState(
-    new Date(Date.now() + 60 * 60 * 1440)
+    new Date(Date.now() + 60 * 60 * 4440)
   );
 
   //Todolist useStates
@@ -47,7 +47,6 @@ const Todos = ({ navigation }) => {
 
   async function fetchData() {
     date.setHours(0, 0, 0, 0);
-    futureDate.setHours(0, 0, 0, 0);
 
     const q = query(
       collection(db, "tasks"),
@@ -96,6 +95,7 @@ const Todos = ({ navigation }) => {
 
   const shiftTasks = async () => {
     date.setHours(0, 0, 0, 0);
+    futureDate.setHours(0, 0, 0, 0);
 
     const newDocumentBody = {
       dateSet: futureDate,
@@ -117,6 +117,7 @@ const Todos = ({ navigation }) => {
       batch.update(sfRef, newDocumentBody);
     });
     await batch.commit();
+    console.log("Batch Complete");
 
     fetchData();
   };

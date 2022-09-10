@@ -56,6 +56,7 @@ function DrawerNavBar() {
         options={{
           drawerActiveBackgroundColor: "#FFE9BE",
           drawerActiveTintColor: "#FFF",
+          headerShown: false,
 
           drawerIcon: (color) => (
             <Anticons name="user" size={22} color={color} />
@@ -64,18 +65,6 @@ function DrawerNavBar() {
       />
       <Drawer.Screen
         name="Dashboard"
-        component={Dashboard}
-        options={{
-          drawerActiveBackgroundColor: "#D7FFBE",
-          drawerActiveTintColor: "#FFF",
-
-          drawerIcon: (color) => (
-            <Anticons name="home" size={22} color={color} />
-          ),
-        }}
-      />
-      <Drawer.Screen
-        name="Todo"
         component={Todos}
         drawerContent={(props) => <TodoScreen {...props} extraData={user} />}
         options={{
@@ -84,7 +73,7 @@ function DrawerNavBar() {
           headerShown: false,
 
           drawerIcon: (color) => (
-            <Maticons name="playlist-edit" size={22} color={color} />
+            <Anticons name="home" size={22} color={color} />
           ),
         }}
       />

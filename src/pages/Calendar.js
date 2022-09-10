@@ -9,7 +9,6 @@ import {
   FlatList,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-
 import {
   collection,
   query,
@@ -26,6 +25,8 @@ const Calendar = () => {
   const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
+  const [open, setOpen] = useState(false);
+
   //Todolist useStates
   const [entityText, setEntityText] = useState("");
   const [toDos, setToDos] = React.useState([]);
@@ -66,7 +67,7 @@ const Calendar = () => {
   };
 
   const showMode = (currentMode) => {
-    if (Platform.OS === "android") {
+    if ((Platform.OS === "android", Platform.OS === "io")) {
       setShow(false);
       // for iOS, add a button that closes the picker
     }
@@ -96,19 +97,15 @@ const Calendar = () => {
     setToDos(updatedToDos);
   };
 
-  const renderToDoItem = ({ item, index }) => {
-    // console.log(date.toDateString());
-    // console.log(item.text);
-
+  const renderToDoItem = ({ item }) => {
     return (
-      <View style={styles.entityContainer}>
-        <Text style={styles.entityText}>
-          {index}. {item.text}
-        </Text>
-      </View>
+      <TouchableOpacity onPress={() => deleteTask(item.id)}>
+        <View style={styles.entityContainer}>
+          <Text style={styles.entityText}>{item.text}</Text>
+        </View>
+      </TouchableOpacity>
     );
   };
-
   return (
     <View style={styles.page}>
       <Text>Tasks For {date.toLocaleDateString()}</Text>
