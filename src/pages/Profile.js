@@ -16,6 +16,18 @@ const Profile = ({ navigation }) => {
   const user = auth.currentUser;
   const email = user.email;
 
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        // Sign-out successful.
+        navigation.navigate("Login");
+      })
+      .catch((error) => {
+        // An error happened.
+        alert(error.message);
+      });
+  };
+
   return (
     <View style={styles.pageBorder}>
       <TouchableOpacity
@@ -28,28 +40,30 @@ const Profile = ({ navigation }) => {
       <View style={styles.headerContainer}>
         <Text style={styles.headerText}>Profile Tab</Text>
 
-        <View style={styles.button}>
-          <TouchableOpacity>
-            <Text style={styles.buttonText}>View Email</Text>
-          </TouchableOpacity>
-        </View>
+        <View style={styles.buttonContainer}>
+          <View style={styles.button}>
+            <TouchableOpacity onPress={alert(email)}>
+              <Text style={styles.buttonText}>View Email</Text>
+            </TouchableOpacity>
+          </View>
 
-        <View style={styles.button}>
-          <TouchableOpacity>
-            <Text style={styles.buttonText}>Notifications</Text>
-          </TouchableOpacity>
-        </View>
+          <View style={styles.button}>
+            <TouchableOpacity>
+              <Text style={styles.buttonText}>Notifications</Text>
+            </TouchableOpacity>
+          </View>
 
-        <View style={styles.button}>
-          <TouchableOpacity>
-            <Text style={styles.buttonText}>About</Text>
-          </TouchableOpacity>
-        </View>
+          <View style={styles.button}>
+            <TouchableOpacity>
+              <Text style={styles.buttonText}>About</Text>
+            </TouchableOpacity>
+          </View>
 
-        <View style={styles.button}>
-          <TouchableOpacity>
-            <Text style={styles.buttonTextLogout}>Logout</Text>
-          </TouchableOpacity>
+          <View style={styles.button}>
+            <TouchableOpacity onPress={handleLogout}>
+              <Text style={styles.buttonTextLogout}>Logout</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </View>
@@ -72,6 +86,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     flex: 1,
     alignItems: "center",
+    marginTop: 20,
   },
   headerText: {
     fontFamily: "Inter-Black",
@@ -111,6 +126,10 @@ const styles = StyleSheet.create({
   },
   button: {
     padding: 20,
+  },
+  buttonContainer: {
+    padding: 20,
+    marginTop: 20,
   },
   buttonText: {
     fontFamily: "Inter-SemiBold",

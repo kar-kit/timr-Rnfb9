@@ -9,7 +9,6 @@ import {
   FlatList,
   Image,
 } from "react-native";
-
 import {
   collection,
   query,
@@ -23,11 +22,8 @@ import {
   writeBatch,
   updateDoc,
 } from "firebase/firestore";
-
 import { useIsFocused } from "@react-navigation/native";
-
 import { db, auth } from "../../config";
-import { async } from "@firebase/util";
 
 const Todos = ({ navigation }) => {
   const [date, setDate] = useState(new Date());
@@ -112,7 +108,7 @@ const Todos = ({ navigation }) => {
     querySnapshot.forEach((docs) => {
       // doc.data() is never undefined for query doc snapshots
       let groupId = docs.id;
-      console.log(groupId);
+      console.log(groupId, date);
       const sfRef = doc(db, "tasks", groupId);
       batch.update(sfRef, newDocumentBody);
     });
@@ -167,7 +163,9 @@ const Todos = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </View>
-
+        <View style={styles.subContainer}>
+          <Text style={styles.subText}>Tasks Set</Text>
+        </View>
         {toDos && (
           <View style={styles.listContainer}>
             <FlatList
@@ -204,6 +202,15 @@ const styles = StyleSheet.create({
     fontFamily: "Inter-Black",
     fontSize: 40,
   },
+  subContainer: {
+    marginLeft: 35,
+    marginTop: 10,
+  },
+  subText: {
+    fontFamily: "Inter-SemiBold",
+    fontSize: 30,
+    color: "white",
+  },
   backdrop: {
     flex: 1,
     backgroundColor: "#BEE8FF",
@@ -216,11 +223,8 @@ const styles = StyleSheet.create({
   formContainer: {
     flexDirection: "row",
     height: 80,
-    marginTop: 40,
-    marginBottom: 20,
-    flex: 1,
-    paddingTop: 10,
-    paddingBottom: 10,
+    marginTop: 0,
+    paddingTop: 0,
     paddingLeft: 30,
     paddingRight: 20,
     justifyContent: "center",
@@ -250,12 +254,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   listContainer: {
-    marginTop: 20,
+    marginTop: 0,
     marginLeft: 10,
     padding: 20,
   },
   entityContainer: {
-    flex: 1,
     backgroundColor: "white",
     borderRadius: 10,
     borderColor: "#C0C0C0",
@@ -271,9 +274,6 @@ const styles = StyleSheet.create({
   shiftContainer: {
     flexDirection: "row",
     height: 70,
-    marginTop: 0,
-    marginBottom: 20,
-    flex: 1,
     justifyContent: "center",
     marginLeft: 30,
     marginRight: 30,
