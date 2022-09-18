@@ -92,6 +92,7 @@ const Todos = ({ navigation }) => {
   const shiftTasks = async () => {
     date.setHours(0, 0, 0, 0);
     futureDate.setHours(0, 0, 0, 0);
+    futureDate.setDate(futureDate.getDate() + 1)
 
     const newDocumentBody = {
       dateSet: futureDate,
@@ -116,6 +117,7 @@ const Todos = ({ navigation }) => {
     console.log("Batch Complete");
 
     fetchData();
+    setFutureDate(new Date(Date.now() + 60 * 60 * 4440));
   };
 
   const renderToDoItem = ({ item }) => {
