@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "timr-Rnfb9",
-    "slug": "timr-Rnfb9",
+    "slug": "timr-joeypang",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./expo-images/icon.png",
@@ -14,7 +14,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -27,6 +29,12 @@
     },
     "web": {
       "favicon": "./expo-images/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "cf335032-3710-435c-922e-73de21d02c05"
+      }
+    },
+    "owner": "joey-pang"
   }
 }
